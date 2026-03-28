@@ -1,0 +1,44 @@
+name: "🤖 Jules Task"
+description: "Submit a coding task for Jules (Google's AI coding agent)"
+labels: ["jules", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Jules AI Coding Task
+        Describe a feature or improvement for Jules to implement. Jules will read `AGENTS.md` for codebase context.
+
+  - type: textarea
+    id: task-description
+    attributes:
+      label: Task Description
+      description: "Clearly describe what you want Jules to build or change."
+      placeholder: "Add a new MQTT topic handler for tron/a2a/operator/heartbeat that publishes operator status every 60s..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-files
+    attributes:
+      label: Affected Files
+      description: "List the files Jules should focus on (optional but helpful)."
+      placeholder: |
+        - src/console/backend/main.py
+        - src/monitoring/monitor_self_heal.py
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: "How will we know this is done?"
+      placeholder: |
+        - [ ] New handler subscribes to the topic
+        - [ ] Existing tests still pass
+        - [ ] No breaking changes to the API
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: "Any extra context, links, or references."
+      placeholder: "Refer to TOOLS.md for MQTT topic conventions..."

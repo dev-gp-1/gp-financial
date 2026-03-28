@@ -1,0 +1,53 @@
+name: "🐛 Jules Bug Fix"
+description: "Report a bug for Jules to diagnose and fix"
+labels: ["jules", "bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Jules Bug Fix Request
+        Describe the bug and Jules will investigate, diagnose, and submit a PR with the fix.
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Behavior
+      description: "What's happening now?"
+      placeholder: "The self-heal engine crashes with a KeyError when processing coral-face failures..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: "What should happen instead?"
+      placeholder: "The self-heal engine should gracefully handle missing keys and continue the diagnosis chain."
+    validations:
+      required: true
+
+  - type: textarea
+    id: relevant-logs
+    attributes:
+      label: Relevant Logs
+      description: "Paste any error logs or stack traces."
+      render: shell
+      placeholder: |
+        Traceback (most recent call last):
+          File "src/monitoring/monitor_self_heal.py", line 542
+          KeyError: 'diagnosis'
+
+  - type: textarea
+    id: affected-files
+    attributes:
+      label: Affected Files
+      description: "Which files are likely involved?"
+      placeholder: |
+        - src/monitoring/monitor_self_heal.py
+        - tests/test_healer_logic.py
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: "Any extra context about the issue."

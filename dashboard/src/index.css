@@ -1,0 +1,525 @@
+@import "tailwindcss";
+
+/* ── GAA Design System (Gernetzke & Associates Standard) ──── */
+/* Supports both light and dark themes via .dark class on <html> */
+
+@theme {
+  /* ── Light Palette ────────────────────────────────────────── */
+  --color-gaa-bg: #F9FAFB;
+  --color-gaa-bg-alt: #F0F4F8;
+  --color-gaa-surface: #FFFFFF;
+  --color-gaa-surface-hover: #F3F4F6;
+  --color-gaa-border: #E5E7EB;
+  --color-gaa-border-accent: #22D3EE;
+
+  /* Teal accent (from ggernetzke.com) */
+  --color-gaa-primary: #14B8A6;
+  --color-gaa-primary-hover: #0D9488;
+  --color-gaa-accent: #22D3EE;
+  --color-gaa-accent-soft: #CCFBF1;
+
+  /* Text hierarchy */
+  --color-gaa-text: #111827;
+  --color-gaa-text-secondary: #4B5563;
+  --color-gaa-text-muted: #9CA3AF;
+
+  /* Semantic */
+  --color-gaa-success: #10B981;
+  --color-gaa-success-bg: #D1FAE5;
+  --color-gaa-danger: #EF4444;
+  --color-gaa-danger-bg: #FEE2E2;
+  --color-gaa-warning: #F59E0B;
+  --color-gaa-warning-bg: #FEF3C7;
+
+  /* ── Dark Palette (GAA exact values from ggernetzke.com) ── */
+  --color-gaa-dark-bg: #0F1520;
+  --color-gaa-dark-bg-alt: #131A28;
+  --color-gaa-dark-surface: #161D2B;
+  --color-gaa-dark-surface-hover: #1C2536;
+  --color-gaa-dark-border: #232D40;
+  --color-gaa-dark-text: #D4DAE3;
+  --color-gaa-dark-text-secondary: #8B95A8;
+  --color-gaa-dark-text-muted: #5A6578;
+  --color-gaa-dark-accent: #1CCBD6;
+  --color-gaa-dark-success-bg: #064E3B;
+  --color-gaa-dark-danger-bg: #7F1D1D;
+  --color-gaa-dark-warning-bg: #78350F;
+
+  /* Typography — Serif headings + Sans body (GAA standard) */
+  --font-display: 'EB Garamond', 'Georgia', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Base Styles ───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background-color: var(--color-gaa-bg);
+  color: var(--color-gaa-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  border-color: var(--color-gaa-border);
+}
+
+/* ── Dark Mode Overrides ───────────────────────────────────── */
+html.dark body {
+  background-color: var(--color-gaa-dark-bg);
+  color: var(--color-gaa-dark-text);
+}
+
+html.dark *, html.dark *::before, html.dark *::after {
+  border-color: var(--color-gaa-dark-border);
+}
+
+/* ── GAA Card ──────────────────────────────────────────────── */
+.gaa-card {
+  background: var(--color-gaa-surface);
+  border: 1px solid var(--color-gaa-border);
+  border-radius: 12px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease;
+}
+
+.gaa-card:hover {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.05);
+  border-color: #D1D5DB;
+}
+
+html.dark .gaa-card {
+  background: var(--color-gaa-dark-surface);
+  border-color: var(--color-gaa-dark-border);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+html.dark .gaa-card:hover {
+  border-color: #2D3A50;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Featured Card (teal border, like GAA "Most Popular") ── */
+.gaa-card-featured {
+  border-color: var(--color-gaa-accent);
+  box-shadow:
+    0 0 0 1px var(--color-gaa-accent),
+    0 4px 16px rgba(34, 211, 238, 0.08);
+}
+
+html.dark .gaa-card-featured {
+  border-color: var(--color-gaa-dark-accent);
+  box-shadow:
+    0 0 0 1px var(--color-gaa-dark-accent),
+    0 4px 16px rgba(28, 203, 214, 0.12);
+}
+
+/* ── Pill Button (GAA standard) ────────────────────────────── */
+.gaa-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: var(--color-gaa-primary);
+  color: white;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.gaa-btn-primary:hover {
+  background: var(--color-gaa-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+
+.gaa-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+html.dark .gaa-btn-primary {
+  background: var(--color-gaa-dark-accent);
+  color: #0F1520;
+}
+
+html.dark .gaa-btn-primary:hover {
+  background: #15B1BB;
+  box-shadow: 0 4px 12px rgba(28, 203, 214, 0.3);
+}
+
+.gaa-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: transparent;
+  color: var(--color-gaa-danger);
+  border: 1px solid var(--color-gaa-danger);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.gaa-btn-danger:hover {
+  background: var(--color-gaa-danger-bg);
+  border-color: var(--color-gaa-danger);
+}
+
+.gaa-btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+html.dark .gaa-btn-danger:hover {
+  background: var(--color-gaa-dark-danger-bg);
+}
+
+/* ── Input ──────────────────────────────────────────────────── */
+.gaa-input {
+  display: block;
+  padding: 10px 14px;
+  background: var(--color-gaa-surface);
+  border: 1px solid var(--color-gaa-border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  color: var(--color-gaa-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+
+.gaa-input::placeholder {
+  color: var(--color-gaa-text-muted);
+}
+
+.gaa-input:focus {
+  border-color: var(--color-gaa-accent);
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+}
+
+html.dark .gaa-input {
+  background: var(--color-gaa-dark-surface-hover);
+  border-color: var(--color-gaa-dark-border);
+  color: var(--color-gaa-dark-text);
+}
+
+html.dark .gaa-input::placeholder {
+  color: var(--color-gaa-dark-text-muted);
+}
+
+html.dark .gaa-input:focus {
+  border-color: var(--color-gaa-dark-accent);
+  box-shadow: 0 0 0 3px rgba(28, 203, 214, 0.15);
+}
+
+/* ── Ghost Button ──────────────────────────────────────────── */
+.gaa-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: transparent;
+  color: var(--color-gaa-text-secondary);
+  border: 1px solid var(--color-gaa-border);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.gaa-btn-ghost:hover {
+  background: var(--color-gaa-surface-hover);
+  color: var(--color-gaa-text);
+  border-color: #D1D5DB;
+}
+
+html.dark .gaa-btn-ghost {
+  color: var(--color-gaa-dark-text-secondary);
+  border-color: var(--color-gaa-dark-border);
+}
+
+html.dark .gaa-btn-ghost:hover {
+  background: var(--color-gaa-dark-surface-hover);
+  color: var(--color-gaa-dark-text);
+  border-color: #2D3A50;
+}
+
+/* ── Section Label (GAA uppercase accent) ──────────────────── */
+.gaa-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gaa-primary);
+}
+
+html.dark .gaa-label {
+  color: var(--color-gaa-dark-accent);
+}
+
+/* ── Serif Heading (GAA display font) ──────────────────────── */
+.gaa-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-gaa-text);
+  line-height: 1.15;
+}
+
+html.dark .gaa-heading {
+  color: var(--color-gaa-dark-text);
+}
+
+/* ── Dark mode header/footer ───────────────────────────────── */
+html.dark .gaa-header {
+  background: var(--color-gaa-dark-surface);
+  border-color: var(--color-gaa-dark-border);
+}
+
+html.dark .gaa-footer {
+  background: var(--color-gaa-dark-surface);
+  border-color: var(--color-gaa-dark-border);
+}
+
+/* ── Dark mode text adapters ───────────────────────────────── */
+html.dark .gaa-text-primary { color: var(--color-gaa-dark-text); }
+html.dark .gaa-text-secondary { color: var(--color-gaa-dark-text-secondary); }
+html.dark .gaa-text-muted { color: var(--color-gaa-dark-text-muted); }
+
+/* ── Dark mode bg helpers ──────────────────────────────────── */
+html.dark .gaa-bg-alt { background: var(--color-gaa-dark-bg-alt); }
+html.dark .gaa-surface-hover:hover { background: var(--color-gaa-dark-surface-hover); }
+
+/* ── Pulse animation for status dots ──────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ── Smooth fade-in for rows ──────────────────────────────── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.5s ease-out forwards;
+}
+
+/* ── Badge ─────────────────────────────────────────────────── */
+.gaa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Table ──────────────────────────────────────────────────── */
+.gaa-table th {
+  padding: 14px 16px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-gaa-text-muted);
+  background: var(--color-gaa-bg);
+  border-bottom: 1px solid var(--color-gaa-border);
+}
+
+html.dark .gaa-table th {
+  background: var(--color-gaa-dark-bg-alt);
+  color: var(--color-gaa-dark-text-muted);
+  border-color: var(--color-gaa-dark-border);
+}
+
+.gaa-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-gaa-border);
+}
+
+html.dark .gaa-table td {
+  border-color: var(--color-gaa-dark-border);
+}
+
+.gaa-table tbody tr:hover {
+  background: var(--color-gaa-surface-hover);
+}
+
+html.dark .gaa-table tbody tr:hover {
+  background: var(--color-gaa-dark-surface-hover);
+}
+
+.gaa-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Mobile responsive table ───────────────────────────────── */
+@media (max-width: 768px) {
+  .gaa-table th,
+  .gaa-table td {
+    padding: 12px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ── Toast ──────────────────────────────────────────────────── */
+.gaa-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 50;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  animation: fade-up 0.3s ease-out;
+}
+
+@media (max-width: 640px) {
+  .gaa-toast {
+    left: 16px;
+    right: 16px;
+    top: 16px;
+  }
+}
+
+.gaa-toast-success {
+  background: var(--color-gaa-success-bg);
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+html.dark .gaa-toast-success {
+  background: var(--color-gaa-dark-success-bg);
+  color: #A7F3D0;
+  border-color: #065F46;
+}
+
+.gaa-toast-error {
+  background: var(--color-gaa-danger-bg);
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+
+html.dark .gaa-toast-error {
+  background: var(--color-gaa-dark-danger-bg);
+  color: #FECACA;
+  border-color: #7F1D1D;
+}
+
+/* ── Theme Toggle Button ───────────────────────────────────── */
+.gaa-theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-gaa-border);
+  background: var(--color-gaa-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.gaa-theme-toggle:hover {
+  border-color: var(--color-gaa-primary);
+  background: var(--color-gaa-surface-hover);
+}
+
+html.dark .gaa-theme-toggle {
+  border-color: var(--color-gaa-dark-border);
+  background: var(--color-gaa-dark-surface);
+}
+
+html.dark .gaa-theme-toggle:hover {
+  border-color: var(--color-gaa-dark-accent);
+  background: var(--color-gaa-dark-surface-hover);
+}
+
+/* ── Custom scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-gaa-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gaa-text-muted);
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: var(--color-gaa-dark-bg);
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-gaa-dark-border);
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gaa-dark-text-muted);
+}
+
+/* ── Dark mode badge adapters ──────────────────────────────── */
+html.dark .gaa-badge-warning {
+  background: var(--color-gaa-dark-warning-bg);
+  color: #FDE68A;
+}
+
+html.dark .gaa-badge-success {
+  background: var(--color-gaa-dark-success-bg);
+  color: #A7F3D0;
+}
+
+html.dark .gaa-badge-connected {
+  background: var(--color-gaa-dark-success-bg);
+  color: #A7F3D0;
+  border-color: #065F46;
+}
+
+html.dark .gaa-badge-alt {
+  background: var(--color-gaa-dark-bg-alt);
+  color: var(--color-gaa-dark-text-secondary);
+}
+
+html.dark .gaa-code-bg {
+  background: var(--color-gaa-dark-bg-alt);
+}

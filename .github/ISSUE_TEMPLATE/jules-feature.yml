@@ -1,0 +1,84 @@
+name: "✨ Jules Feature Enhancement"
+description: "Request a frontend feature enhancement for Jules to implement and submit a PR"
+labels: ["jules", "enhancement", "frontend"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Jules Feature Enhancement
+        Describe the feature and Jules will implement it and submit a PR.
+        
+        **Scope:** Self-contained frontend work only (Vue components, CSS, composables).
+        **Quality bar:** Must score 4+ on the TRON Grid Quality Rubric.
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: "What should be added or changed?"
+      placeholder: "Add animated boot sequence when the TRON Grid dashboard loads..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: "Specific requirements that must be met."
+      placeholder: |
+        - [ ] Animation completes in under 3 seconds
+        - [ ] Works on both desktop and mobile
+        - [ ] Respects prefers-reduced-motion
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-files
+    attributes:
+      label: Affected Files
+      description: "Which files need to be created or modified?"
+      placeholder: |
+        - src/console/frontend/src/components/BootSequence.vue (NEW)
+        - src/console/frontend/src/App.vue (MODIFY)
+    validations:
+      required: true
+
+  - type: textarea
+    id: design-reference
+    attributes:
+      label: Design Reference
+      description: "Visual inspiration, screenshots, or detailed design specs."
+      placeholder: "Inspired by TRON Legacy grid boot — cyan grid lines drawing inward, systems flickering online one by one..."
+
+  - type: dropdown
+    id: quality-category
+    attributes:
+      label: Quality Rubric Category
+      description: "Which rubric category does this improve?"
+      options:
+        - Visual Design & Theme
+        - Animations & Micro-Interactions
+        - Data Density & Visualization
+        - Voice Agent UX
+        - Alert System
+        - Responsive & Mobile
+        - Accessibility
+        - Performance
+        - Security Posture Display
+        - Brand & Identity
+    validations:
+      required: true
+
+  - type: input
+    id: current-score
+    attributes:
+      label: Current Rubric Score
+      description: "Current score for this category (1-5)"
+      placeholder: "2.5"
+
+  - type: input
+    id: target-score
+    attributes:
+      label: Target Rubric Score
+      description: "Target score after this enhancement (1-5)"
+      placeholder: "4.0"
