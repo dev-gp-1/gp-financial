@@ -7,7 +7,7 @@ Architecture:
   - 3 agents powered by AgentLoop (Gemini function-calling)
   - MQTT event triggers: tron/ledger/{invoice.created, payment.received, sync.complete, ...}
   - Tools call invoice-cli.js via subprocess for ledger operations
-  - SOUL identities loaded from src/agents/souls/
+  - SOUL identities loaded from backend/agents/souls/
 
 Usage:
     # As standalone daemon (MQTT listener)
@@ -27,6 +27,7 @@ import os
 import subprocess
 import sys
 import time
+import requests
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
@@ -126,7 +127,6 @@ def tool_get_entity_history(entity_name: str) -> dict:
 
 
 def stage_action(agent: str, tool_name: str, params: dict, description: str = "") -> dict:
-    import requests
     url = "http://127.0.0.1:5000/api/v1/agents/pending_actions"
     payload = {
         "agent": agent,
@@ -148,18 +148,22 @@ def tool_update_invoice_status(invoice_id: str, new_status: str, reason: str = "
     valid = {"paid", "pending", "overdue", "sent", "included", "draft"}
     if new_status not in valid:
         return {"error": f"Invalid status '{new_status}'. Valid: {valid}"}
-    return stage_action("paymaster", "update_invoice_status", 
+    res = stage_action("paymaster", "update_invoice_status",
                         {"invoice_id": invoice_id, "new_status": new_status, "reason": reason},
                         f"Change {invoice_id} to '{new_status}'. Reason: {reason}")
+    res.update({"invoice_id": invoice_id, "new_status": new_status, "reason": reason})
+    return res
 
 
 def tool_send_payment_reminder(invoice_id: str, tier: str = "polite") -> dict:
     """Stage a payment reminder for HITL review."""
     if tier not in {"polite", "formal", "urgent"}:
         return {"error": f"Invalid tier '{tier}'. Valid: polite, formal, urgent"}
-    return stage_action("collector", "send_payment_reminder", 
+    res = stage_action("collector", "send_payment_reminder",
                         {"invoice_id": invoice_id, "tier": tier},
                         f"Send {tier} payment reminder for {invoice_id}.")
+    res.update({"invoice_id": invoice_id, "tier": tier})
+    return res
 
 
 def tool_run_enrichment() -> dict:
@@ -438,15 +442,21 @@ class FinancialAgents:
             elif topic == TOPIC_INVOICE_CREATED:
                 self._log_ledger_activity("collector", topic, payload)
                 self._log_ledger_activity("auditor", topic, payload)
+                self.run_collector(context=f"MQTT Trigger: {topic} with {json.dumps(payload)}")
             elif topic == TOPIC_PAYMENT_RECEIVED:
                 self._log_ledger_activity("paymaster", topic, payload)
                 self._log_ledger_activity("collector", topic, payload)
+                self.run_paymaster(context=f"MQTT Trigger: {topic} with {json.dumps(payload)}")
+                self.run_collector(context=f"MQTT Trigger: {topic} with {json.dumps(payload)}")
             elif topic == TOPIC_PAYMENT_OVERDUE:
                 self._log_ledger_activity("collector", topic, payload)
+                self.run_collector(context=f"MQTT Trigger: {topic} with {json.dumps(payload)}")
             elif topic == TOPIC_AP_CREATED:
                 self._log_ledger_activity("paymaster", topic, payload)
+                self.run_paymaster(context=f"MQTT Trigger: {topic} with {json.dumps(payload)}")
             elif topic == TOPIC_SYNC_COMPLETE:
                 self._log_ledger_activity("auditor", topic, payload)
+                self.run_auditor(context=f"MQTT Trigger: {topic} with {json.dumps(payload)}")
             elif topic == TOPIC_INBOX_SCANNED:
                 self._log_ledger_activity("sentinel", topic, payload)
             elif topic == TOPIC_BILL_DUE:
