@@ -550,10 +550,11 @@ class TestStatusTransitions:
     """Test all valid status transitions and guards."""
 
     @pytest.mark.parametrize("status", ["paid", "pending", "overdue", "sent", "included", "draft"])
-    @patch('financial_agents.subprocess.run')
-    def test_all_valid_statuses(self, mock_run, status):
+    @patch('financial_agents.requests.post')
+    def test_all_valid_statuses(self, mock_post, status):
         from financial_agents import tool_update_invoice_status
-        mock_run.return_value = MagicMock(stdout=f"  ✅ Status updated → {status}", stderr="", returncode=0)
+        mock_post.return_value = MagicMock(status_code=200)
+        mock_post.return_value.json.return_value = {"status": "ok"}
         result = tool_update_invoice_status("TEST-001", status)
         assert result["new_status"] == status
         assert "error" not in result
@@ -566,10 +567,11 @@ class TestStatusTransitions:
         result = tool_update_invoice_status("TEST-001", bad_status)
         assert "error" in result
 
-    @patch('financial_agents.subprocess.run')
-    def test_status_update_preserves_invoice_id(self, mock_run):
+    @patch('financial_agents.requests.post')
+    def test_status_update_preserves_invoice_id(self, mock_post):
         from financial_agents import tool_update_invoice_status
-        mock_run.return_value = MagicMock(stdout="ok", stderr="", returncode=0)
+        mock_post.return_value = MagicMock(status_code=200)
+        mock_post.return_value.json.return_value = {"status": "ok"}
         complex_id = "20260315-EDC09-C4156-REV2"
         result = tool_update_invoice_status(complex_id, "paid", "ACH confirmed")
         assert result["invoice_id"] == complex_id

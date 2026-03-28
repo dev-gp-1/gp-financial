@@ -110,12 +110,11 @@ class TestToolExecutors:
         assert "Amount Anomalies" in result["stdout"]
         assert "Period Gaps" in result["stdout"]
 
-    @patch('financial_agents.subprocess.run')
-    def test_update_invoice_status_valid(self, mock_run):
+    @patch('financial_agents.requests.post')
+    def test_update_invoice_status_valid(self, mock_post):
         from financial_agents import tool_update_invoice_status
-        mock_run.return_value = MagicMock(
-            stdout=SYNTH_STATUS_UPDATE["stdout"], stderr="", returncode=0
-        )
+        mock_post.return_value = MagicMock(status_code=200)
+        mock_post.return_value.json.return_value = {"status": "ok"}
         result = tool_update_invoice_status("TEST-001", "paid", "payment confirmed")
         assert result["new_status"] == "paid"
         assert result["invoice_id"] == "TEST-001"
@@ -127,10 +126,11 @@ class TestToolExecutors:
         assert "error" in result
         assert "Invalid status" in result["error"]
 
-    @patch('financial_agents.subprocess.run')
-    def test_send_payment_reminder_valid_tiers(self, mock_run):
+    @patch('financial_agents.requests.post')
+    def test_send_payment_reminder_valid_tiers(self, mock_post):
         from financial_agents import tool_send_payment_reminder
-        mock_run.return_value = MagicMock(stdout="  ✅ Reminders sent", stderr="", returncode=0)
+        mock_post.return_value = MagicMock(status_code=200)
+        mock_post.return_value.json.return_value = {"status": "ok"}
         for tier in ["polite", "formal", "urgent"]:
             result = tool_send_payment_reminder("TEST-001", tier)
             assert result["tier"] == tier
@@ -292,7 +292,7 @@ class TestFallbackMode:
 class TestSOULFiles:
     """Verify SOUL identity files exist and contain required sections."""
 
-    SOULS_DIR = os.path.join(os.path.dirname(__file__), '..', 'src', 'agents', 'souls')
+    SOULS_DIR = os.path.join(os.path.dirname(__file__), '..', 'backend', 'agents', 'souls')
 
     @pytest.mark.parametrize("agent", ["collector", "paymaster", "auditor"])
     def test_soul_file_exists(self, agent):
