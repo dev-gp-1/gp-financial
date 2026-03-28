@@ -17,7 +17,7 @@ from datetime import date, timedelta
 from unittest.mock import MagicMock
 
 # Add project paths
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src', 'agents'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'backend', 'agents'))
 
 from ar_ap_evaluator import (
     ARStatus, APStatus, TxnStatus,
