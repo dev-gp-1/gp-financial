@@ -35,6 +35,15 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('portfolio');
 
   useEffect(() => {
+    // E2E Mocking Support: Bypasses Firebase if a mock user is injected
+    const mockUser = (window as any).__E2E_MOCK_USER__;
+    if (mockUser) {
+      console.log('E2E: Using mock user session', mockUser);
+      setUser(mockUser);
+      setAuthLoading(false);
+      return;
+    }
+
     const unsub = onAuthChange((u) => {
       if (u && isEmailAllowed(u.email)) {
         setUser(u);
