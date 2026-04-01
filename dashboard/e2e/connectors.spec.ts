@@ -64,7 +64,7 @@ test.describe('Backend Connector E2E', () => {
 
   // TODO Phase 4: enable once /connectivity-test route is implemented
   test.describe('Connectivity Test', () => {
-    test.skip('GET connectivity-test returns platform statuses', async ({ request }) => {
+    test('GET connectivity-test returns platform statuses', async ({ request }) => {
       const res = await request.get(`${API_BASE}/connectivity-test`)
       expect(res.status()).toBeLessThan(500)
       const data = await res.json()
@@ -91,7 +91,7 @@ test.describe('Backend Connector E2E', () => {
 
   // TODO Phase 4: enable once /agents/* routes are implemented in backend
   test.describe('Financial Agent Orchestrator', () => {
-    test.skip('GET pending-actions returns action list structure', async ({ request }) => {
+    test('GET pending-actions returns action list structure', async ({ request }) => {
       const res = await request.get(`${API_BASE}/agents/pending-actions`)
       expect(res.status()).toBeLessThan(500)
       const data = await res.json()
@@ -101,14 +101,14 @@ test.describe('Backend Connector E2E', () => {
       expect(typeof data.total).toBe('number')
     })
 
-    test.skip('GET pending-actions accepts tenant_id filter', async ({ request }) => {
+    test('GET pending-actions accepts tenant_id filter', async ({ request }) => {
       const res = await request.get(`${API_BASE}/agents/pending-actions?tenant_id=client-hugga&limit=10`)
       expect(res.status()).toBeLessThan(500)
       const data = await res.json()
       expect(data).toHaveProperty('actions')
     })
 
-    test.skip('GET agent stats returns agent summary', async ({ request }) => {
+    test('GET agent stats returns agent summary', async ({ request }) => {
       const res = await request.get(`${API_BASE}/agents/stats`)
       expect(res.status()).toBeLessThan(500)
       const data = await res.json()
@@ -134,7 +134,7 @@ test.describe('Backend Connector E2E', () => {
       expect(typeof data).toBe('object')
     })
 
-    test.skip('POST review action validates decision field', async ({ request }) => {
+    test('POST review action validates decision field', async ({ request }) => {
       const res = await request.post(`${API_BASE}/agents/actions/test-id/review`, {
         data: { decision: 'invalid_decision', executed_by: 'e2e-test' },
       })
