@@ -8,12 +8,15 @@ on:
       - 'backend/**'
       - 'deploy/**'
       - '.github/workflows/deploy.yml'
+      - 'dashboard/**'
 
 env:
   PROJECT_ID: 'gp-phantomvision-dev'
   REGION: 'us-central1'
   SERVICE_NAME: 'gp-financial'
   IMAGE_NAME: 'gcr.io/gp-phantomvision-dev/gp-backend'
+  FRONTEND_SERVICE_NAME: 'gp-financial-dashboard'
+  FRONTEND_IMAGE_NAME: 'gcr.io/gp-phantomvision-dev/gp-frontend'
 
 jobs:
   deploy:
@@ -57,3 +60,44 @@ jobs:
           image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
           flags: |
             --allow-unauthenticated
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.GCP_SA_EMAIL }}'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker authentication
+        run: gcloud auth configure-docker gcr.io --quiet
+
+      - name: Build and Push Frontend Container
+        run: |
+          docker build -t ${{ env.FRONTEND_IMAGE_NAME }}:${{ github.sha }} -t ${{ env.FRONTEND_IMAGE_NAME }}:latest -f deploy/dashboard.Dockerfile .
+          docker push ${{ env.FRONTEND_IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.FRONTEND_IMAGE_NAME }}:latest
+
+      - name: Deploy Frontend to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.FRONTEND_SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.FRONTEND_IMAGE_NAME }}:${{ github.sha }}
+          flags: |
+            --allow-unauthenticated
+            --port=8080

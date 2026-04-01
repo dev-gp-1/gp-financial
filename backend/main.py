@@ -27,14 +27,19 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+import os
 # CORS configuration to allow local dashboard and any deployment origin
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "https://ghostprotocol.ai")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173", 
         "http://127.0.0.1:5173",
-        "https://ghostprotocol.ai" # Add production dashboard domains if needed
+        FRONTEND_URL,
+        "https://gp-financial-dashboard-*.run.app"
     ],
+    allow_origin_regex=r"^https://gp-financial-dashboard.*\.run\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
