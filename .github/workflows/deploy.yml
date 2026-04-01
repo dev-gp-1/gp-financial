@@ -1,0 +1,59 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - 'deploy/**'
+      - '.github/workflows/deploy.yml'
+
+env:
+  PROJECT_ID: 'gp-phantomvision-dev'
+  REGION: 'us-central1'
+  SERVICE_NAME: 'gp-financial'
+  IMAGE_NAME: 'gcr.io/gp-phantomvision-dev/gp-backend'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          # It's recommended to use Workload Identity Federation
+          # Set these secrets in your GitHub repository
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.GCP_SA_EMAIL }}'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker authentication
+        run: gcloud auth configure-docker gcr.io --quiet
+
+      - name: Build and Push Container
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} -t ${{ env.IMAGE_NAME }}:latest -f deploy/Dockerfile .
+          docker push ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          flags: |
+            --allow-unauthenticated

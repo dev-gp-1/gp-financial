@@ -1,11 +1,17 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/gp-financial', '-f', 'deploy/Dockerfile', '.']
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/gp-financial-repo/gp-financial'
+      - '-f'
+      - 'deploy/Dockerfile'
+      - '.'
 
-  # Push the container image to Container Registry
+  # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/gp-financial']
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/gp-financial-repo/gp-financial']
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -15,12 +21,11 @@ steps:
       - 'deploy'
       - 'gp-financial'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/gp-financial'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/gp-financial-repo/gp-financial'
       - '--region'
       - 'us-central1'
-      - '--platform'
-      - 'managed'
       - '--allow-unauthenticated'
+      - '--set-secrets=MERCURY_API_KEY=MERCURY_API_KEY:latest,QBO_CLIENT_ID=QBO_CLIENT_ID:latest,QBO_CLIENT_SECRET=QBO_CLIENT_SECRET:latest,DB_CONNECTION_STRING=DB_CONNECTION_STRING:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest'
 
 images:
-  - 'gcr.io/$PROJECT_ID/gp-financial'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/gp-financial-repo/gp-financial'

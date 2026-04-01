@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://gp-backend-sct5pdcluq-uc.a.run.app/api/integrations';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE || 'https://gp-financial-431115644565.us-central1.run.app') + '/api/integrations';
 const TRON_API_BASE = import.meta.env.VITE_TRON_API || 'http://127.0.0.1:5000';
 
 // ── Payment Types ────────────────────────────────────────────────────────

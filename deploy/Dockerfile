@@ -20,5 +20,6 @@ EXPOSE 8080
 
 # Cloud Run expects PORT env var
 ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
 
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8080"]
