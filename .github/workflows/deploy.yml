@@ -11,12 +11,12 @@ on:
       - 'dashboard/**'
 
 env:
-  PROJECT_ID: 'gp-phantomvision-dev'
+  PROJECT_ID: 'gaa-492114'
   REGION: 'us-central1'
   SERVICE_NAME: 'gp-financial'
-  IMAGE_NAME: 'gcr.io/gp-phantomvision-dev/gp-backend'
+  IMAGE_NAME: 'us-central1-docker.pkg.dev/gaa-492114/gp-financial-repo/gp-backend'
   FRONTEND_SERVICE_NAME: 'gp-financial-dashboard'
-  FRONTEND_IMAGE_NAME: 'gcr.io/gp-phantomvision-dev/gp-frontend'
+  FRONTEND_IMAGE_NAME: 'us-central1-docker.pkg.dev/gaa-492114/gp-financial-repo/gp-frontend'
 
 jobs:
   deploy:
@@ -44,7 +44,7 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Configure Docker authentication
-        run: gcloud auth configure-docker gcr.io --quiet
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       - name: Build and Push Container
         run: |
