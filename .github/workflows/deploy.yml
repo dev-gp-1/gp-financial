@@ -84,7 +84,7 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Configure Docker authentication
-        run: gcloud auth configure-docker gcr.io --quiet
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
       - name: Build and Push Frontend Container
         run: |
